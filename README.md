@@ -1,6 +1,72 @@
 # 📚 DERSLY - Öğrenci Destek Platformu
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://dersly.streamlit.app)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Status](https://img.shields.io/badge/status-production-brightgreen.svg)]()
+
 Modern, kullanıcı dostu üniversite öğrenci yönetim sistemi.
+
+**🌐 [Hemen Kullanmaya Başla →](https://dersly.streamlit.app)**
+
+---
+
+## 📸 Ekran Görüntüleri
+
+<details>
+<summary>🖼️ Ekran görüntülerini görmek için tıklayın</summary>
+
+### Ana Sayfa
+![Ana Sayfa](https://via.placeholder.com/800x400/667eea/ffffff?text=Ana+Sayfa+-+Dashboard)
+
+### Ders Programı
+![Dersler](https://via.placeholder.com/800x400/48bb78/ffffff?text=Ders+Programi)
+
+### Ödev Takibi
+![Ödevler](https://via.placeholder.com/800x400/ed8936/ffffff?text=Odev+Takibi)
+
+### Hatırlatıcılar
+![Hatırlatıcılar](https://via.placeholder.com/800x400/f56565/ffffff?text=Hatirlaticilar)
+
+</details>
+
+---
+
+## 🚀 Hızlı Başlangıç
+
+### 🌐 Online Kullanım (Önerilen)
+
+**Hiçbir kurulum gerektirmez!** Tarayıcınızdan doğrudan kullanın:
+
+👉 **[dersly.streamlit.app](https://dersly.streamlit.app)** 👈
+
+- ✅ Anında kullanıma hazır
+- ✅ Kurulum gerektirmez
+- ✅ Tüm cihazlardan erişilebilir
+- ✅ Otomatik güncellemeler
+- ✅ Mobil uyumlu
+
+### 📱 Web App Olarak Kurulum (Opsiyonel)
+
+Uygulamayı telefonunuza veya bilgisayarınıza web app olarak ekleyebilirsiniz:
+
+**iOS (iPhone/iPad):**
+1. Safari'de [dersly.streamlit.app](https://dersly.streamlit.app) açın
+2. Paylaş butonuna tıklayın (⬆️)
+3. "Ana Ekrana Ekle" seçin
+4. Artık bir uygulama gibi kullanabilirsiniz!
+
+**Android:**
+1. Chrome'da [dersly.streamlit.app](https://dersly.streamlit.app) açın
+2. Menü butonuna tıklayın (⋮)
+3. "Ana ekrana ekle" seçin
+4. Artık bir uygulama gibi kullanabilirsiniz!
+
+**Desktop (Chrome/Edge):**
+1. [dersly.streamlit.app](https://dersly.streamlit.app) açın
+2. Adres çubuğundaki yükle simgesine tıklayın
+3. "Yükle" butonuna tıklayın
+4. Artık masaüstü uygulaması gibi kullanabilirsiniz!
 
 ## ✨ Özellikler
 
@@ -42,13 +108,15 @@ Modern, kullanıcı dostu üniversite öğrenci yönetim sistemi.
 - Kapsamlı input validasyonu
 - Türkçe hata mesajları
 
-## 🚀 Kurulum
+## � Yerel Kurulum (Geliştiriciler İçin)
+
+Uygulamayı kendi bilgisayarınızda çalıştırmak isterseniz:
 
 ### Gereksinimler
 - Python 3.8+
 - pip
 
-### Adımlar
+### Kurulum Adımları
 
 1. **Repoyu klonlayın:**
 ```bash
@@ -84,6 +152,8 @@ streamlit run app.py
 ```
 http://localhost:8501
 ```
+
+> **💡 Not:** Çoğu kullanıcı için online versiyon ([dersly.streamlit.app](https://dersly.streamlit.app)) daha pratiktir.
 
 ## 📖 Kullanım
 
@@ -250,19 +320,35 @@ DERSLY/
 
 Bu proje MIT lisansı altında lisanslanmıştır.
 
+## 🌐 Demo & Kullanım
+
+### Online Demo
+👉 **[dersly.streamlit.app](https://dersly.streamlit.app)**
+
+### Özellikler
+- ✅ Anında kullanıma hazır
+- ✅ Kurulum gerektirmez
+- ✅ Ücretsiz
+- ✅ Tüm özellikler aktif
+- ✅ Mobil uyumlu
+
 ## 👥 İletişim
 
-Proje Linki: [https://github.com/yourusername/dersly](https://github.com/yourusername/dersly)
+- **Live App:** [dersly.streamlit.app](https://dersly.streamlit.app)
+- **GitHub:** [https://github.com/yourusername/dersly](https://github.com/yourusername/dersly)
+- **Issues:** [GitHub Issues](https://github.com/yourusername/dersly/issues)
 
 ## 🙏 Teşekkürler
 
 - Streamlit ekibine harika framework için
 - Tüm katkıda bulunanlara
+- Kullanıcılarımıza geri bildirimleri için
 
 ---
 
 **Made with ❤️ for students**
 
+**🌐 Live:** [dersly.streamlit.app](https://dersly.streamlit.app)  
 **Version:** 2.0.0  
 **Status:** ✅ Production Ready  
 **Last Updated:** 2024

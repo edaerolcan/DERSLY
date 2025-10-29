@@ -35,6 +35,7 @@ wheels/
 
 # Streamlit
 .streamlit/secrets.toml
+.streamlit/config.toml
 
 # Testing
 .pytest_cache/
@@ -44,3 +45,19 @@ htmlcov/
 # OS
 .DS_Store
 Thumbs.db
+
+# Kiro Specs (development only)
+.kiro/
+
+# Documentation (keep only main README)
+ADVANCED_FEATURES_SUMMARY.md
+CALENDAR_INTEGRATION_SUMMARY.md
+FINAL_IMPLEMENTATION_SUMMARY.md
+MANUAL_TESTING_CHECKLIST.md
+PROJECT_STATUS.md
+KULLANIM_KILAVUZU.md
+GITHUB_STRUCTURE.md
+
+# Development files
+QUICK_TEST.bat
+config.py
