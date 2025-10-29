@@ -14,11 +14,10 @@ Modern, kullanıcı dostu üniversite öğrenci yönetim sistemi.
 
 ### 🌐 Online Kullanım (Önerilen)
 
-**Hiçbir kurulum gerektirmez!** Tarayıcınızdan doğrudan kullanın:
+*Tarayıcınızdan doğrudan kullanın:*
 
 👉 **[dersly.streamlit.app](https://dersly.streamlit.app)** 👈
 
-- ✅ Anında kullanıma hazır
 - ✅ Kurulum gerektirmez
 - ✅ Tüm cihazlardan erişilebilir
 - ✅ Otomatik güncellemeler
