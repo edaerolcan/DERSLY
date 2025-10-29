@@ -85,6 +85,25 @@ for assignment in assignments:
 # Display calendar
 st.subheader(f"{calendar.month_name[selected_month]} {selected_year}")
 
+# Mobile-friendly calendar CSS
+st.markdown("""
+<style>
+    /* Calendar mobile optimization */
+    @media (max-width: 768px) {
+        .row-widget.stHorizontalBlock {
+            gap: 2px !important;
+        }
+        .row-widget.stHorizontalBlock > div {
+            padding: 2px !important;
+            min-width: 40px !important;
+        }
+        .element-container {
+            font-size: 0.75rem !important;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Get calendar for the month
 cal = calendar.monthcalendar(selected_year, selected_month)
 

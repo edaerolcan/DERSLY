@@ -70,6 +70,44 @@ def get_modern_css(theme="light") -> str:
             color: white !important;
         }}
         
+        /* Enhanced sidebar navigation links */
+        [data-testid="stSidebarNav"] ul {{
+            padding: 0.5rem 0;
+        }}
+        
+        [data-testid="stSidebarNav"] li {{
+            margin: 0.25rem 0;
+        }}
+        
+        [data-testid="stSidebarNav"] a {{
+            display: flex !important;
+            align-items: center;
+            padding: 1rem 1.25rem !important;
+            font-size: 1.05rem !important;
+            font-weight: 600 !important;
+            border-radius: 12px !important;
+            transition: all 0.3s ease !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            margin: 0.25rem 0.5rem !important;
+            min-height: 48px !important;
+        }}
+        
+        [data-testid="stSidebarNav"] a:hover {{
+            background: rgba(255, 255, 255, 0.2) !important;
+            transform: translateX(5px) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        }}
+        
+        [data-testid="stSidebarNav"] a[aria-current="page"] {{
+            background: rgba(255, 255, 255, 0.25) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+            font-weight: 700 !important;
+        }}
+        
+        [data-testid="stSidebarNav"] span {{
+            font-size: 1.05rem !important;
+        }}
+        
         /* Logo styling with animation */
         .sidebar-logo {{
             text-align: center;

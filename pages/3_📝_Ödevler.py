@@ -83,12 +83,95 @@ def get_priority_badge(priority: str) -> str:
 def get_type_emoji(assignment_type: str) -> str:
     """Get type emoji."""
     type_map = {
-        'assignment': '�',
+        'assignment': '📝',
         'exam': '📄',
         'project': '💼',
         'quiz': '❓'
     }
     return type_map.get(assignment_type, '📝')
+
+
+def display_assignment_card(assignment: dict, urgent: bool = False):
+    """Display assignment card with deadline warnings."""
+    # Parse due date
+    try:
+        due_date_str = assignment.get('due_date', '')
+        if 'T' in due_date_str:
+            due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
+        else:
+            due_date = datetime.fromisoformat(due_date_str)
+        
+        badge_emoji, badge_text, urgency = get_deadline_badge(due_date, assignment.get('status', 'pending'))
+    except:
+        due_date = None
+        badge_emoji, badge_text, urgency = "⚪", "Tarih yok", 0
+    
+    # Card styling based on urgency
+    if urgent or urgency >= 3:
+        card_style = "background-color: #fff3cd; border-left: 4px solid #ff6b6b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;"
+    else:
+        card_style = "background-color: #f8f9fa; border-left: 4px solid #dee2e6; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;"
+    
+    with st.container():
+        st.markdown(f'<div style="{card_style}">', unsafe_allow_html=True)
+        
+        col1, col2, col3 = st.columns([3, 2, 1])
+        
+        with col1:
+            # Title with status
+            status_emoji = '✅' if assignment.get('status') == 'completed' else '⏳'
+            type_emoji = get_type_emoji(assignment.get('type', 'assignment'))
+            st.markdown(f"**{status_emoji} {type_emoji} {assignment.get('title', 'Başlıksız')}**")
+            
+            # Description
+            if assignment.get('description'):
+                desc = assignment['description']
+                if len(desc) > 100:
+                    st.caption(desc[:100] + "...")
+                else:
+                    st.caption(desc)
+        
+        with col2:
+            # Deadline badge
+            st.markdown(f"**{badge_emoji} {badge_text}**")
+            
+            # Due date
+            if due_date:
+                st.caption(f"📅 {due_date.strftime('%d.%m.%Y %H:%M')}")
+            
+            # Priority
+            priority_badge = get_priority_badge(assignment.get('priority', 'medium'))
+            st.caption(f"**Öncelik:** {priority_badge}")
+        
+        with col3:
+            # Action buttons
+            if assignment.get('status') == 'pending':
+                if st.button("✅", key=f"complete_{assignment['id']}", help="Tamamla"):
+                    if AssignmentManager.update_assignment(assignment['id'], {'status': 'completed'}):
+                        st.success("✅ Görev tamamlandı!")
+                        st.rerun()
+            else:
+                if st.button("↩️", key=f"reopen_{assignment['id']}", help="Geri Al"):
+                    if AssignmentManager.update_assignment(assignment['id'], {'status': 'pending'}):
+                        st.success("✅ Görev yeniden açıldı!")
+                        st.rerun()
+            
+            # Calendar export button
+            if st.button("📅", key=f"calendar_{assignment['id']}", help="Takvime Ekle"):
+                ics_content = CalendarExport.create_assignment_ics(assignment)
+                download_link = CalendarExport.create_download_link(
+                    ics_content,
+                    f"dersly-{assignment.get('title', 'odev').replace(' ', '-')}"
+                )
+                st.markdown(download_link, unsafe_allow_html=True)
+                st.caption("💡 İndirilen dosyayı açarak takviminize ekleyin")
+            
+            if st.button("🗑️", key=f"delete_{assignment['id']}", help="Sil"):
+                if AssignmentManager.delete_assignment(assignment['id']):
+                    st.success("✅ Görev silindi!")
+                    st.rerun()
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 # Page header with modern styling
@@ -201,89 +284,6 @@ with tab1:
             display_assignment_card(assignment)
     else:
         st.info("📝 Görev bulunamadı.")
-
-
-def display_assignment_card(assignment: dict, urgent: bool = False):
-    """Display assignment card with deadline warnings."""
-    # Parse due date
-    try:
-        due_date_str = assignment.get('due_date', '')
-        if 'T' in due_date_str:
-            due_date = datetime.fromisoformat(due_date_str.replace('Z', '+00:00'))
-        else:
-            due_date = datetime.fromisoformat(due_date_str)
-        
-        badge_emoji, badge_text, urgency = get_deadline_badge(due_date, assignment.get('status', 'pending'))
-    except:
-        due_date = None
-        badge_emoji, badge_text, urgency = "⚪", "Tarih yok", 0
-    
-    # Card styling based on urgency
-    if urgent or urgency >= 3:
-        card_style = "background-color: #fff3cd; border-left: 4px solid #ff6b6b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;"
-    else:
-        card_style = "background-color: #f8f9fa; border-left: 4px solid #dee2e6; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;"
-    
-    with st.container():
-        st.markdown(f'<div style="{card_style}">', unsafe_allow_html=True)
-        
-        col1, col2, col3 = st.columns([3, 2, 1])
-        
-        with col1:
-            # Title with status
-            status_emoji = '✅' if assignment.get('status') == 'completed' else '⏳'
-            type_emoji = get_type_emoji(assignment.get('type', 'assignment'))
-            st.markdown(f"**{status_emoji} {type_emoji} {assignment.get('title', 'Başlıksız')}**")
-            
-            # Description
-            if assignment.get('description'):
-                desc = assignment['description']
-                if len(desc) > 100:
-                    st.caption(desc[:100] + "...")
-                else:
-                    st.caption(desc)
-        
-        with col2:
-            # Deadline badge
-            st.markdown(f"**{badge_emoji} {badge_text}**")
-            
-            # Due date
-            if due_date:
-                st.caption(f"📅 {due_date.strftime('%d.%m.%Y %H:%M')}")
-            
-            # Priority
-            priority_badge = get_priority_badge(assignment.get('priority', 'medium'))
-            st.caption(f"**Öncelik:** {priority_badge}")
-        
-        with col3:
-            # Action buttons
-            if assignment.get('status') == 'pending':
-                if st.button("✅", key=f"complete_{assignment['id']}", help="Tamamla"):
-                    if AssignmentManager.update_assignment(assignment['id'], {'status': 'completed'}):
-                        st.success("✅ Görev tamamlandı!")
-                        st.rerun()
-            else:
-                if st.button("↩️", key=f"reopen_{assignment['id']}", help="Geri Al"):
-                    if AssignmentManager.update_assignment(assignment['id'], {'status': 'pending'}):
-                        st.success("✅ Görev yeniden açıldı!")
-                        st.rerun()
-            
-            # Calendar export button
-            if st.button("📅", key=f"calendar_{assignment['id']}", help="Takvime Ekle"):
-                ics_content = CalendarExport.create_assignment_ics(assignment)
-                download_link = CalendarExport.create_download_link(
-                    ics_content,
-                    f"dersly-{assignment.get('title', 'odev').replace(' ', '-')}"
-                )
-                st.markdown(download_link, unsafe_allow_html=True)
-                st.caption("💡 İndirilen dosyayı açarak takviminize ekleyin")
-            
-            if st.button("🗑️", key=f"delete_{assignment['id']}", help="Sil"):
-                if AssignmentManager.delete_assignment(assignment['id']):
-                    st.success("✅ Görev silindi!")
-                    st.rerun()
-        
-        st.markdown('</div>', unsafe_allow_html=True)
 
 
 with tab2:
