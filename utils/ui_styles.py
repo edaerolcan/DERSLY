@@ -543,14 +543,112 @@ def get_modern_css(theme="light") -> str:
         }}
         
         /* ============================================
-           RESPONSIVE DESIGN
+           MOBILE RESPONSIVE DESIGN
            ============================================ */
         
+        /* Ensure minimum touch target size */
+        button, a, input, select, textarea {{
+            min-height: 44px;
+        }}
+        
+        /* Mobile styles (< 768px) */
         @media (max-width: 768px) {{
-            .page-header h1 {{ font-size: 2rem; }}
+            /* Typography */
+            body {{ font-size: 14px; }}
+            .page-header h1 {{ font-size: 1.75rem; }}
+            .page-header p {{ font-size: 1rem; }}
+            .section-header h2 {{ font-size: 1.25rem; }}
             .stats-number {{ font-size: 2.25rem; }}
-            .custom-card {{ padding: 1.25rem; }}
+            
+            /* Spacing */
+            .page-header {{ padding: 1.5rem; margin-bottom: 1.5rem; }}
+            .custom-card {{ padding: 1rem; margin-bottom: 1rem; }}
+            .stats-card {{ padding: 1.25rem; }}
+            .main .block-container {{ padding: 1rem !important; }}
+            
+            /* Logo */
             .sidebar-logo img {{ width: 60px; height: 60px; }}
+            .sidebar-logo h2 {{ font-size: 1.25rem; }}
+            
+            /* Stack columns */
+            .row-widget.stHorizontalBlock {{
+                flex-direction: column !important;
+            }}
+            
+            .row-widget.stHorizontalBlock > div {{
+                width: 100% !important;
+                margin-bottom: 0.75rem;
+            }}
+            
+            /* Full width buttons */
+            .stButton > button {{
+                width: 100% !important;
+                margin-bottom: 0.5rem;
+                padding: 0.875rem 1.5rem;
+            }}
+            
+            /* Forms */
+            input, select, textarea {{
+                font-size: 16px !important; /* Prevent zoom on iOS */
+            }}
+            
+            /* Cards */
+            .custom-card, .stats-card, .info-card {{
+                margin-bottom: 0.75rem;
+            }}
+            
+            /* Tabs */
+            .stTabs [data-baseweb="tab"] {{
+                padding: 0.75rem 1.25rem;
+                font-size: 0.875rem;
+            }}
+        }}
+        
+        /* Tablet styles (768px - 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {{
+            .page-header h1 {{ font-size: 2.25rem; }}
+            .stats-number {{ font-size: 2.75rem; }}
+            
+            /* 2 columns on tablet */
+            .row-widget.stHorizontalBlock > div {{
+                width: 48% !important;
+            }}
+        }}
+        
+        /* Touch-friendly spacing for touch devices */
+        @media (hover: none) and (pointer: coarse) {{
+            button, a {{
+                padding: 12px 24px !important;
+                margin: 8px 0 !important;
+            }}
+            
+            .stButton > button {{
+                min-height: 48px !important;
+            }}
+            
+            /* Increase tap target size */
+            .badge {{
+                padding: 0.625rem 1.125rem;
+                min-height: 44px;
+            }}
+        }}
+        
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {{
+            .main .block-container {{
+                padding: 0.5rem !important;
+            }}
+            
+            .page-header {{
+                padding: 1rem;
+            }}
+        }}
+        
+        /* High DPI screens */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {{
+            .sidebar-logo img {{
+                image-rendering: -webkit-optimize-contrast;
+            }}
         }}
     </style>
     """
@@ -563,15 +661,23 @@ def apply_modern_style(theme="light"):
 
 
 def show_logo_in_sidebar():
-    """Display animated logo in sidebar."""
+    """Display animated logo in sidebar with reminder count."""
     import streamlit as st
     import os
     import base64
+    from utils.reminder_manager import ReminderManager
     
     logo_path = "logo-512x512.webp"
     if os.path.exists(logo_path):
         with open(logo_path, "rb") as img_file:
             logo_base64 = base64.b64encode(img_file.read()).decode()
+        
+        # Get urgent reminder count
+        try:
+            reminder_counts = ReminderManager.get_reminder_count()
+            urgent_count = reminder_counts.get('urgent', 0)
+        except:
+            urgent_count = 0
         
         with st.sidebar:
             st.markdown(f"""
@@ -580,3 +686,30 @@ def show_logo_in_sidebar():
                 <h2>DERSLY</h2>
             </div>
             """, unsafe_allow_html=True)
+            
+            # Show urgent reminders badge if any
+            if urgent_count > 0:
+                st.markdown(f"""
+                <div style="
+                    background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 12px;
+                    text-align: center;
+                    margin: 1rem 0;
+                    box-shadow: 0 4px 12px rgba(252, 129, 129, 0.3);
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    animation: pulse 2s infinite;
+                " onclick="window.location.href='?page=pages/5_🔔_Hatırlatıcılar.py'">
+                    <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 4px;">
+                        🔔 {urgent_count}
+                    </div>
+                    <div style="font-size: 0.875rem; opacity: 0.95;">
+                        Acil Hatırlatıcı
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                if st.button("🔔 Hatırlatıcılara Git", use_container_width=True, type="primary"):
+                    st.switch_page("pages/5_🔔_Hatırlatıcılar.py")

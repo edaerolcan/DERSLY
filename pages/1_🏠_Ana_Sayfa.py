@@ -173,19 +173,19 @@ try:
     
     with col1:
         if st.button("➕ Yeni Ders Ekle", use_container_width=True):
-            st.switch_page("pages/2_📚_Courses.py")
+            st.switch_page("pages/2_📚_Dersler.py")
     
     with col2:
         if st.button("➕ Yeni Ödev Ekle", use_container_width=True):
-            st.switch_page("pages/3_📝_Assignments.py")
+            st.switch_page("pages/3_📝_Ödevler.py")
     
     with col3:
         if st.button("📅 Takvim Görünümü", use_container_width=True):
-            st.switch_page("pages/4_📅_Calendar.py")
+            st.switch_page("pages/4_📅_Takvim.py")
     
     with col4:
         if st.button("📊 Not Gir", use_container_width=True):
-            st.switch_page("pages/6_📊_GPA.py")
+            st.switch_page("pages/6_📊_Not_Ortalaması.py")
 
 except Exception as e:
     st.error(f"❌ Bir hata oluştu: {str(e)}")

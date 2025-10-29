@@ -10,6 +10,7 @@ from utils.user_manager import UserManager
 from utils.assignment_manager import AssignmentManager
 from utils.course_manager import CourseManager
 from utils.input_validator import InputValidator
+from utils.calendar_export import CalendarExport
 from utils.ui_styles import apply_modern_style
 
 # Page configuration
@@ -267,6 +268,16 @@ def display_assignment_card(assignment: dict, urgent: bool = False):
                         st.success("✅ Görev yeniden açıldı!")
                         st.rerun()
             
+            # Calendar export button
+            if st.button("📅", key=f"calendar_{assignment['id']}", help="Takvime Ekle"):
+                ics_content = CalendarExport.create_assignment_ics(assignment)
+                download_link = CalendarExport.create_download_link(
+                    ics_content,
+                    f"dersly-{assignment.get('title', 'odev').replace(' ', '-')}"
+                )
+                st.markdown(download_link, unsafe_allow_html=True)
+                st.caption("💡 İndirilen dosyayı açarak takviminize ekleyin")
+            
             if st.button("🗑️", key=f"delete_{assignment['id']}", help="Sil"):
                 if AssignmentManager.delete_assignment(assignment['id']):
                     st.success("✅ Görev silindi!")
@@ -354,6 +365,22 @@ with tab2:
                 
                 assignment_id = AssignmentManager.add_assignment(assignment_data)
                 st.success(f"✅ Görev başarıyla eklendi! (ID: {assignment_id})")
+                
+                # Offer calendar export
+                st.info("📅 **Mobil takviminize eklemek ister misiniz?**")
+                
+                # Get the created assignment
+                created_assignment = AssignmentManager.get_assignment(assignment_id)
+                if created_assignment:
+                    # Create iCalendar content
+                    ics_content = CalendarExport.create_assignment_ics(created_assignment)
+                    download_link = CalendarExport.create_download_link(
+                        ics_content,
+                        f"dersly-{title.replace(' ', '-')}"
+                    )
+                    st.markdown(download_link, unsafe_allow_html=True)
+                    st.caption("💡 İndirilen .ics dosyasını açarak görevi takviminize ekleyebilirsiniz")
+                
                 st.balloons()
                 st.rerun()
 
@@ -483,3 +510,40 @@ with col2:
 with col3:
     upcoming = len(AssignmentManager.get_upcoming_assignments(7))
     st.metric("Yaklaşan (7 gün)", upcoming)
+
+# Bulk calendar export
+st.markdown("---")
+st.subheader("📅 Toplu Takvim Aktarımı")
+st.info("💡 **Tüm bekleyen görevlerinizi bir seferde takviminize ekleyin!**")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("📅 Tüm Bekleyen Görevleri Takvime Aktar", use_container_width=True, type="primary"):
+        pending = AssignmentManager.get_assignments_by_status('pending')
+        if pending:
+            ics_content = CalendarExport.create_multiple_events_ics(pending)
+            download_link = CalendarExport.create_download_link(
+                ics_content,
+                f"dersly-tum-gorevler-{datetime.now().strftime('%Y%m%d')}"
+            )
+            st.markdown(download_link, unsafe_allow_html=True)
+            st.success(f"✅ {len(pending)} görev takvim dosyasına eklendi!")
+            st.caption("💡 İndirilen dosyayı açarak tüm görevleri takviminize ekleyebilirsiniz")
+        else:
+            st.warning("⚠️ Bekleyen görev bulunamadı")
+
+with col2:
+    if st.button("📅 Yaklaşan Görevleri Takvime Aktar (7 gün)", use_container_width=True):
+        upcoming_assignments = AssignmentManager.get_upcoming_assignments(7)
+        if upcoming_assignments:
+            ics_content = CalendarExport.create_multiple_events_ics(upcoming_assignments)
+            download_link = CalendarExport.create_download_link(
+                ics_content,
+                f"dersly-yaklasan-gorevler-{datetime.now().strftime('%Y%m%d')}"
+            )
+            st.markdown(download_link, unsafe_allow_html=True)
+            st.success(f"✅ {len(upcoming_assignments)} yaklaşan görev takvim dosyasına eklendi!")
+            st.caption("💡 İndirilen dosyayı açarak yaklaşan görevleri takviminize ekleyebilirsiniz")
+        else:
+            st.info("ℹ️ Yaklaşan görev bulunamadı")

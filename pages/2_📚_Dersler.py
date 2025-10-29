@@ -7,6 +7,7 @@ from utils.storage_manager import StorageManager
 from utils.user_manager import UserManager
 from utils.course_manager import CourseManager
 from utils.input_validator import InputValidator
+from utils.calendar_export import CalendarExport
 from utils.ui_styles import apply_modern_style
 
 # Page configuration
@@ -191,6 +192,22 @@ with tab2:
             else:
                 course_id = CourseManager.add_course(course_data)
                 st.success(f"✅ Ders başarıyla eklendi! (ID: {course_id})")
+                
+                # Offer calendar export for recurring course
+                st.info("📅 **Dersi mobil takviminize eklemek ister misiniz?**")
+                
+                # Get the created course
+                created_course = CourseManager.get_course(course_id)
+                if created_course:
+                    # Create recurring iCalendar content (14 weeks = 1 semester)
+                    ics_content = CalendarExport.create_course_ics(created_course, weeks=14)
+                    download_link = CalendarExport.create_download_link(
+                        ics_content,
+                        f"dersly-{course_code.replace(' ', '-')}"
+                    )
+                    st.markdown(download_link, unsafe_allow_html=True)
+                    st.caption("💡 İndirilen .ics dosyası dersi 14 hafta boyunca takviminize ekler")
+                
                 st.balloons()
                 st.rerun()
 
