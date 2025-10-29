@@ -1,9 +1,7 @@
 # 📚 DERSLY - Öğrenci Destek Platformu
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://dersly.streamlit.app)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Status](https://img.shields.io/badge/status-production-brightgreen.svg)]()
 
 Modern, kullanıcı dostu üniversite öğrenci yönetim sistemi.
 
@@ -11,26 +9,6 @@ Modern, kullanıcı dostu üniversite öğrenci yönetim sistemi.
 
 ---
 
-## 📸 Ekran Görüntüleri
-
-<details>
-<summary>🖼️ Ekran görüntülerini görmek için tıklayın</summary>
-
-### Ana Sayfa
-![Ana Sayfa](https://via.placeholder.com/800x400/667eea/ffffff?text=Ana+Sayfa+-+Dashboard)
-
-### Ders Programı
-![Dersler](https://via.placeholder.com/800x400/48bb78/ffffff?text=Ders+Programi)
-
-### Ödev Takibi
-![Ödevler](https://via.placeholder.com/800x400/ed8936/ffffff?text=Odev+Takibi)
-
-### Hatırlatıcılar
-![Hatırlatıcılar](https://via.placeholder.com/800x400/f56565/ffffff?text=Hatirlaticilar)
-
-</details>
-
----
 
 ## 🚀 Hızlı Başlangıç
 
