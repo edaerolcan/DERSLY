@@ -134,20 +134,68 @@ with tab2:
             )
         
         # Grade scale reference
-        with st.expander("📖 Not Skalası Referansı"):
-            st.markdown("""
-            | Harf Notu | 4'lük Sistem |
-            |-----------|--------------|
-            | AA        | 4.00         |
-            | BA        | 3.50         |
-            | BB        | 3.00         |
-            | CB        | 2.50         |
-            | CC        | 2.00         |
-            | DC        | 1.50         |
-            | DD        | 1.00         |
-            | FD        | 0.50         |
-            | FF        | 0.00         |
-            """)
+        with st.expander("📖 Not Skalası Referansı - Tüm Sistemler"):
+            tab1, tab2, tab3, tab4 = st.tabs(["4.0 Çift Harf", "4.0 Tek Harf", "4.0 Artı/Eksi", "5.0 Sistem"])
+            
+            with tab1:
+                st.markdown("**4.0 Çift Harf Sistemi** (İTÜ, Hacettepe, vb.)")
+                st.markdown("""
+                | Harf Notu | Puan |
+                |-----------|------|
+                | AA        | 4.00 |
+                | BA        | 3.50 |
+                | BB        | 3.00 |
+                | CB        | 2.50 |
+                | CC        | 2.00 |
+                | DC        | 1.50 |
+                | DD        | 1.00 |
+                | FD        | 0.50 |
+                | FF        | 0.00 |
+                """)
+            
+            with tab2:
+                st.markdown("**4.0 Tek Harf Sistemi** (Boğaziçi, ODTÜ, vb.)")
+                st.markdown("""
+                | Harf Notu | Puan |
+                |-----------|------|
+                | A         | 4.00 |
+                | B         | 3.00 |
+                | C         | 2.00 |
+                | D         | 1.00 |
+                | F         | 0.00 |
+                """)
+            
+            with tab3:
+                st.markdown("**4.0 Artı/Eksi Sistemi** (Koç, Sabancı, Bahçeşehir, vb.)")
+                st.markdown("""
+                | Harf Notu | Puan |
+                |-----------|------|
+                | A+        | 4.00 |
+                | A         | 4.00 |
+                | A-        | 3.70 |
+                | B+        | 3.30 |
+                | B         | 3.00 |
+                | B-        | 2.70 |
+                | C+        | 2.30 |
+                | C         | 2.00 |
+                | C-        | 1.70 |
+                | D+        | 1.30 |
+                | D         | 1.00 |
+                | F         | 0.00 |
+                """)
+            
+            with tab4:
+                st.markdown("**5.0 Sayısal Sistem**")
+                st.markdown("""
+                | Not | Puan |
+                |-----|------|
+                | 5   | 5.00 |
+                | 4   | 4.00 |
+                | 3   | 3.00 |
+                | 2   | 2.00 |
+                | 1   | 1.00 |
+                | 0   | 0.00 |
+                """)
         
         submitted = st.form_submit_button("➕ Not Ekle", type="primary", use_container_width=True)
         

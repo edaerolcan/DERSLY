@@ -95,11 +95,14 @@ class GPASystem:
         "ODTÜ": "4.0 Tek Harf",
         "Koç Üniversitesi": "4.0 Artı/Eksi",
         "Sabancı Üniversitesi": "4.0 Artı/Eksi",
+        "Bahçeşehir Üniversitesi": "4.0 Artı/Eksi",
         "Bilkent Üniversitesi": "4.0 Tek Harf",
         "Hacettepe Üniversitesi": "4.0 Çift Harf",
         "Ankara Üniversitesi": "4.0 Çift Harf",
         "İstanbul Üniversitesi": "4.0 Çift Harf",
-        "Ege Üniversitesi": "4.0 Çift Harf"
+        "Ege Üniversitesi": "4.0 Çift Harf",
+        "Marmara Üniversitesi": "4.0 Çift Harf",
+        "Yıldız Teknik Üniversitesi": "4.0 Çift Harf"
     }
     
     @staticmethod

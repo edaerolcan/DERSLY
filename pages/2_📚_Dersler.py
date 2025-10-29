@@ -160,11 +160,51 @@ with tab2:
             }[x]
         )
         
-        col1, col2 = st.columns(2)
-        with col1:
-            start_time = st.time_input("Başlangıç Saati *")
-        with col2:
-            end_time = st.time_input("Bitiş Saati *")
+        # Time input options
+        time_input_method = st.radio(
+            "⏰ Zaman Girişi",
+            ["Önerilen Saatler", "Manuel Giriş"],
+            horizontal=True,
+            help="Önerilen saatlerden seçin veya manuel girin"
+        )
+        
+        if time_input_method == "Önerilen Saatler":
+            from utils.department_catalog import TimeSlotSuggestions
+            
+            # Get time slot suggestions
+            time_slots = TimeSlotSuggestions.COMMON_SLOTS
+            slot_options = [f"{slot['start']} - {slot['end']} ({slot['duration']} dk)" for slot in time_slots]
+            
+            selected_slot = st.selectbox(
+                "Zaman Dilimi Seçin",
+                options=["Seçiniz..."] + slot_options,
+                help="Yaygın ders saatlerinden birini seçin"
+            )
+            
+            if selected_slot != "Seçiniz...":
+                # Parse selected slot
+                slot_index = slot_options.index(selected_slot)
+                selected_time_slot = time_slots[slot_index]
+                start_time = datetime.strptime(selected_time_slot['start'], "%H:%M").time()
+                end_time = datetime.strptime(selected_time_slot['end'], "%H:%M").time()
+            else:
+                start_time = datetime.strptime("09:00", "%H:%M").time()
+                end_time = datetime.strptime("10:30", "%H:%M").time()
+        else:
+            # Manuel time input
+            col1, col2 = st.columns(2)
+            with col1:
+                start_time = st.time_input(
+                    "⏰ Başlangıç Saati *",
+                    value=datetime.strptime("09:00", "%H:%M").time(),
+                    help="Saati tıklayıp klavyeden yazabilirsiniz (örn: 10:20)"
+                )
+            with col2:
+                end_time = st.time_input(
+                    "⏰ Bitiş Saati *",
+                    value=datetime.strptime("10:30", "%H:%M").time(),
+                    help="Saati tıklayıp klavyeden yazabilirsiniz (örn: 11:10)"
+                )
         
         credits = st.number_input("Kredi", min_value=1, max_value=10, value=3)
         

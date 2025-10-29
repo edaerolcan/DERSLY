@@ -86,14 +86,22 @@ if not profile:
                 )
             
             # University selection
-            universities = ["Seçiniz...", "Boğaziçi Üniversitesi", "İTÜ", "ODTÜ", "Koç Üniversitesi", 
-                          "Sabancı Üniversitesi", "Bilkent Üniversitesi", "Hacettepe Üniversitesi",
-                          "Ankara Üniversitesi", "İstanbul Üniversitesi", "Ege Üniversitesi", "Diğer"]
+            universities = ["Seçiniz...", "Bahçeşehir Üniversitesi", "Boğaziçi Üniversitesi", "İTÜ", "ODTÜ", 
+                          "Koç Üniversitesi", "Sabancı Üniversitesi", "Bilkent Üniversitesi", 
+                          "Hacettepe Üniversitesi", "Ankara Üniversitesi", "İstanbul Üniversitesi", 
+                          "Ege Üniversitesi", "Marmara Üniversitesi", "Yıldız Teknik Üniversitesi", "Diğer"]
             university = st.selectbox(
                 "🎓 Üniversite",
                 options=universities,
                 help="Üniversitenizi seçin (GPA sistemi otomatik ayarlanır)"
             )
+            
+            # Custom university entry if "Diğer" selected
+            if university == "Diğer":
+                university = st.text_input(
+                    "Üniversite adını girin",
+                    placeholder="Üniversite adı"
+                )
             
         with col2:
             class_year = st.number_input(
