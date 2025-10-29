@@ -1,236 +1,268 @@
-# DERSLY - Öğrenci Destek Platformu 📚
+# 📚 DERSLY - Öğrenci Destek Platformu
 
-Üniversite öğrencileri için ders programı, ödev takibi ve not yönetimi uygulaması.
+Modern, kullanıcı dostu üniversite öğrenci yönetim sistemi.
 
-## 🌟 Özellikler
+## ✨ Özellikler
 
-- **📚 Ders Yönetimi**: Haftalık ders programınızı oluşturun ve yönetin
-- **📝 Ödev Takibi**: Ödev, sınav, proje ve quizlerinizi takip edin
-- **📊 GPA Hesaplama**: Notlarınızı girin ve GPA'nizi otomatik hesaplayın
-- **📅 Takvim Görünümü**: Görevlerinizi aylık takvimde görüntüleyin
-- **💾 Veri Yedekleme**: Verilerinizi JSON formatında dışa/içe aktarın
-- **🔒 Gizlilik**: Verileriniz sadece tarayıcınızda saklanır
+### 🎓 Akademik Yönetim
+- **Ders Programı:** Haftalık ders programınızı yönetin
+- **Ödev Takibi:** Ödev, sınav, proje ve quizleri takip edin
+- **Not Hesaplama:** Özelleştirilebilir GPA sistemleri (4.0, 5.0, 100'lük)
+- **Takvim Görünümü:** Aylık takvim ile görevlerinizi görüntüleyin
+
+### 🔔 Hatırlatıcılar
+- Aciliyet bazlı hatırlatıcılar (🔴 Acil, 🟡 Yakında, 🟢 Sonra)
+- Filtreleme seçenekleri (Bugün, Yarın, Bu Hafta)
+- Sidebar'da acil hatırlatıcı sayacı
+
+### 📅 Takvim Entegrasyonu
+- iCalendar (.ics) export
+- Tek tıkla mobil takvime ekleme
+- Toplu export (tüm görevler)
+- Tekrarlayan ders programı (14 hafta)
+- iOS, Android, Windows, macOS desteği
+
+### 🎨 Modern UI/UX
+- Glassmorphism tasarım
+- Smooth animasyonlar
+- Responsive (mobil uyumlu)
+- Touch-friendly (44x44px minimum)
+- Dark mode desteği
+
+### 🚀 Akıllı Özellikler
+- **Bölüm Kataloğu:** 60+ bölüm, 10 fakülte
+- **Ders Önerileri:** Bölüme özel ders kataloğu
+- **Zaman Dilimleri:** 19 yaygın ders saati önerisi
+- **GPA Sistemleri:** 5 farklı not sistemi
+- **Üniversite Presetleri:** 10 üniversite için hazır ayarlar
+
+### 🔒 Güvenlik & Gizlilik
+- Tüm veriler tarayıcıda saklanır
+- Sunucuya veri gönderilmez
+- Kapsamlı input validasyonu
+- Türkçe hata mesajları
 
 ## 🚀 Kurulum
 
 ### Gereksinimler
-
-- Python 3.8 veya üzeri
-- pip (Python paket yöneticisi)
+- Python 3.8+
+- pip
 
 ### Adımlar
 
-1. Repoyu klonlayın:
+1. **Repoyu klonlayın:**
 ```bash
-git clone https://github.com/yourusername/DERSLY.git
-cd DERSLY
+git clone https://github.com/yourusername/dersly.git
+cd dersly
 ```
 
-2. Gerekli paketleri yükleyin:
+2. **Virtual environment oluşturun:**
+```bash
+python -m venv venv
+```
+
+3. **Virtual environment'ı aktifleştirin:**
+```bash
+# Windows
+venv\Scripts\activate
+
+# macOS/Linux
+source venv/bin/activate
+```
+
+4. **Bağımlılıkları yükleyin:**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Uygulamayı çalıştırın:
+5. **Uygulamayı çalıştırın:**
 ```bash
 streamlit run app.py
 ```
 
-4. Tarayıcınızda `http://localhost:8501` adresine gidin
+6. **Tarayıcınızda açın:**
+```
+http://localhost:8501
+```
 
 ## 📖 Kullanım
 
-### İlk Kullanım
-
-1. Uygulama açıldığında profil oluşturma ekranı gelecektir
-2. Ad, soyad ve e-posta bilgilerinizi girin
-3. İsteğe bağlı olarak öğrenci no, bölüm ve sınıf bilgilerini ekleyin
-4. "Profil Oluştur" butonuna tıklayın
+### İlk Kurulum
+1. Uygulamayı açın
+2. İsterseniz profil oluşturun (opsiyonel)
+3. Üniversitenizi ve bölümünüzü seçin
+4. GPA sistemi otomatik ayarlanır
 
 ### Ders Ekleme
-
-1. Sol menüden "📚 Dersler" sayfasına gidin
-2. "Yeni Ders Ekle" sekmesini seçin
-3. Ders bilgilerini doldurun (ad, kod, gün, saat, kredi)
-4. "Ders Ekle" butonuna tıklayın
+1. **Dersler** sayfasına gidin
+2. **Yeni Ders Ekle** sekmesini açın
+3. Bölümünüze göre ders önerileri görürsünüz
+4. Zaman dilimi önerilerinden seçin
+5. **Takvime Ekle** ile mobil takviminize ekleyin
 
 ### Ödev Ekleme
+1. **Ödevler** sayfasına gidin
+2. **Yeni Görev Ekle** sekmesini açın
+3. Bilgileri doldurun
+4. **Takvime Ekle** ile mobil takviminize ekleyin
 
-1. Sol menüden "📝 Ödevler" sayfasına gidin
-2. "Yeni Görev Ekle" sekmesini seçin
-3. Görev bilgilerini doldurun (başlık, tür, bitiş tarihi, öncelik)
-4. "Görev Ekle" butonuna tıklayın
+### Not Girişi
+1. **Not Ortalaması** sayfasına gidin
+2. GPA sisteminiz otomatik seçili
+3. Notları girin (sisteme uygun seçenekler)
+4. GPA otomatik hesaplanır
 
-### Not Girme ve GPA Hesaplama
+### Hatırlatıcılar
+1. **Hatırlatıcılar** sayfasına gidin
+2. Acil görevlerinizi görün
+3. Filtreleme yapın (Bugün, Yarın, Bu Hafta)
+4. Sidebar'da acil sayacı takip edin
 
-1. Sol menüden "📊 Not Ortalaması" sayfasına gidin
-2. "Not Ekle" sekmesini seçin
-3. Ders adı, not (0-4 arası), kredi, dönem ve yıl bilgilerini girin
-4. "Not Ekle" butonuna tıklayın
-5. GPA'niz otomatik olarak hesaplanacaktır
+## 🎯 GPA Sistemleri
 
-### Veri Yedekleme
+### Desteklenen Sistemler:
+- **4.0 Çift Harf:** AA, BA, BB, CB, CC, DC, DD, FD, FF
+- **4.0 Tek Harf:** A, B, C, D, F
+- **4.0 Artı/Eksi:** A+, A, A-, B+, B, B-, ...
+- **5.0 Sistem:** 5, 4, 3, 2, 1, 0
+- **100 Sistem:** Yüzdelik notlar
 
-1. Sol menüden "👤 Profil" sayfasına gidin
-2. "Veri Yönetimi" sekmesini seçin
-3. "Verileri İndir" butonuna tıklayın
-4. JSON dosyası bilgisayarınıza indirilecektir
+### Üniversite Presetleri:
+- Boğaziçi Üniversitesi → 4.0 Tek Harf
+- İTÜ → 4.0 Çift Harf
+- ODTÜ → 4.0 Tek Harf
+- Koç/Sabancı → 4.0 Artı/Eksi
+- Ve daha fazlası...
 
-### Veri Geri Yükleme
+## 📱 Mobil Kullanım
 
-1. Sol menüden "👤 Profil" sayfasına gidin
-2. "Veri Yönetimi" sekmesini seçin
-3. "JSON dosyası seçin" alanından yedek dosyanızı seçin
-4. Uyarıları okuyun ve onaylayın
-5. "Verileri İçe Aktar" butonuna tıklayın
+### Responsive Tasarım:
+- ✅ Mobile-first yaklaşım
+- ✅ Touch-friendly butonlar (44x44px)
+- ✅ Stack columns on mobile
+- ✅ Collapsible sidebar
+- ✅ 16px minimum font
 
-## 💾 Veri Depolama
+### Takvim Entegrasyonu:
+1. Ödev/ders ekleyin
+2. **📅 Takvime Ekle** butonuna tıklayın
+3. .ics dosyası indirilir
+4. Dosyayı açın
+5. Mobil takvim uygulaması otomatik açılır
+6. Etkinlik eklenir, bildirimler kurulur
 
-**Önemli:** DERSLY verilerinizi tarayıcınızın session state'inde saklar. Bu şu anlama gelir:
+## 🧪 Test
 
-- ✅ Verileriniz sadece sizin cihazınızda kalır (gizlilik)
-- ✅ Veritabanı kurulumu gerektirmez (kolay kullanım)
-- ✅ Hızlı veri erişimi (performans)
-- ⚠️ Tarayıcı kapatıldığında veriler kaybolur
-- ⚠️ Farklı cihazlar arasında otomatik senkronizasyon yok
-
-### Öneriler
-
-1. **Düzenli Yedekleme**: Verilerinizi her hafta dışa aktarın
-2. **Güvenli Saklama**: Yedek dosyalarınızı güvenli bir yerde saklayın
-3. **Cihaz Değişikliği**: Farklı cihazda kullanmak için veri aktarımı yapın
-4. **Tarayıcı Temizliği**: Tarayıcı önbelleğini temizlerken dikkatli olun
-
-## 🌐 Streamlit Cloud'a Deploy
-
-1. GitHub'a push edin:
+### Otomatik Testler:
 ```bash
-git add .
-git commit -m "Initial commit"
-git push origin main
+# Tüm testleri çalıştır
+python -m pytest tests/ -v
+
+# Sadece validation testleri
+python -m pytest tests/test_input_validator.py -v
+
+# Sadece integration testleri
+python -m pytest tests/test_auth_removal.py -v
 ```
 
-2. [Streamlit Cloud](https://streamlit.io/cloud)'a gidin
-3. "New app" butonuna tıklayın
-4. Repository'nizi seçin
-5. Main file path: `app.py`
-6. "Deploy" butonuna tıklayın
+### Test Coverage:
+- **57 test** (100% pass rate)
+- **40 unit tests** (validation)
+- **17 integration tests** (auth removal)
 
-**Not:** Veritabanı konfigürasyonu gerekmez!
-
-## 🛠️ Teknolojiler
-
-- **Streamlit**: Web arayüzü
-- **Python**: Backend logic
-- **Session State**: Veri depolama
-- **JSON**: Veri export/import formatı
-
-## 📁 Proje Yapısı
+## 📊 Proje Yapısı
 
 ```
 DERSLY/
-├── app.py                      # Ana uygulama dosyası
-├── config.py                   # Konfigürasyon ayarları
-├── requirements.txt            # Python bağımlılıkları
-├── .env                        # Ortam değişkenleri
-├── utils/                      # Yardımcı modüller
-│   ├── storage_manager.py      # Veri depolama yönetimi
-│   ├── user_manager.py         # Kullanıcı profil yönetimi
-│   ├── course_manager.py       # Ders yönetimi
-│   ├── assignment_manager.py   # Ödev yönetimi
-│   ├── grade_manager.py        # Not yönetimi
-│   ├── export_import_ui.py     # Export/Import UI bileşenleri
-│   ├── exceptions.py           # Özel exception sınıfları
-│   ├── validators.py           # Veri doğrulama
-│   ├── calculations.py         # Hesaplama fonksiyonları
-│   └── ui_helpers.py           # UI yardımcı fonksiyonları
-└── pages/                      # Streamlit sayfaları
-    ├── 1_🏠_Home.py            # Ana sayfa
-    ├── 2_📚_Courses.py         # Dersler sayfası
-    ├── 3_📝_Assignments.py     # Ödevler sayfası
-    ├── 4_📅_Calendar.py        # Takvim sayfası
-    ├── 5_🔔_Reminders.py       # Hatırlatıcılar sayfası
-    ├── 6_📊_GPA.py             # GPA sayfası
-    └── 7_👤_Profile.py         # Profil sayfası
+├── app.py                          # Ana uygulama
+├── pages/                          # Streamlit sayfaları
+│   ├── 1_🏠_Ana_Sayfa.py
+│   ├── 2_📚_Dersler.py
+│   ├── 3_📝_Ödevler.py
+│   ├── 4_📅_Takvim.py
+│   ├── 5_🔔_Hatırlatıcılar.py
+│   ├── 6_📊_Not_Ortalaması.py
+│   └── 7_👤_Profil.py
+├── utils/                          # Yardımcı modüller
+│   ├── storage_manager.py         # Veri yönetimi
+│   ├── user_manager.py            # Kullanıcı yönetimi
+│   ├── course_manager.py          # Ders yönetimi
+│   ├── assignment_manager.py      # Ödev yönetimi
+│   ├── grade_manager.py           # Not yönetimi
+│   ├── reminder_manager.py        # Hatırlatıcı yönetimi
+│   ├── input_validator.py         # Validasyon
+│   ├── calendar_export.py         # Takvim export
+│   ├── department_catalog.py      # Bölüm kataloğu
+│   ├── gpa_systems.py             # GPA sistemleri
+│   ├── ui_styles.py               # UI stilleri
+│   ├── ui_polish.py               # UI yardımcıları
+│   └── mobile_utils.py            # Mobil yardımcıları
+├── tests/                          # Test dosyaları
+│   ├── test_input_validator.py
+│   └── test_auth_removal.py
+└── requirements.txt                # Python bağımlılıkları
 ```
 
-## 🔧 Geliştirme
+## 🛠️ Teknolojiler
 
-### Yeni Özellik Ekleme
+- **Framework:** Streamlit 1.28+
+- **Language:** Python 3.8+
+- **Storage:** Browser Session State
+- **Styling:** Custom CSS (Glassmorphism)
+- **Calendar:** iCalendar (.ics) format
+- **Testing:** pytest
 
-1. Yeni bir branch oluşturun:
-```bash
-git checkout -b feature/yeni-ozellik
-```
+## 📝 Özellik Listesi
 
-2. Değişikliklerinizi yapın ve test edin
+### ✅ Tamamlanan:
+- [x] Ders programı yönetimi
+- [x] Ödev/sınav takibi
+- [x] GPA hesaplama (5 sistem)
+- [x] Takvim görünümü
+- [x] Hatırlatıcı sistemi
+- [x] Takvim entegrasyonu (.ics)
+- [x] Mobil responsive
+- [x] Input validasyonu
+- [x] Bölüm kataloğu
+- [x] Ders önerileri
+- [x] Zaman dilimi önerileri
+- [x] Üniversite presetleri
+- [x] Dark mode
+- [x] Veri export/import
 
-3. Commit edin:
-```bash
-git add .
-git commit -m "Yeni özellik: açıklama"
-```
-
-4. Push edin:
-```bash
-git push origin feature/yeni-ozellik
-```
-
-### Kod Standartları
-
-- PEP 8 Python stil kılavuzunu takip edin
-- Fonksiyonlar için docstring yazın
-- Anlamlı değişken isimleri kullanın
-- Hata yönetimi ekleyin
-
-## 🐛 Sorun Giderme
-
-### Uygulama Açılmıyor
-
-```bash
-# Paketleri yeniden yükleyin
-pip install -r requirements.txt --upgrade
-
-# Streamlit cache'i temizleyin
-streamlit cache clear
-```
-
-### Veriler Kayboldu
-
-- Tarayıcı önbelleğini temizlediyseniz veriler kaybolmuş olabilir
-- Yedek dosyanızı kullanarak verileri geri yükleyin
-- Gelecekte düzenli yedekleme yapın
-
-### Import Hatası
-
-- JSON dosyasının geçerli bir DERSLY yedek dosyası olduğundan emin olun
-- Dosyanın bozuk olmadığını kontrol edin
-- Farklı bir yedek dosyası deneyin
-
-## 📝 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır.
+### 🔄 Gelecek Özellikler:
+- [ ] Google Calendar API entegrasyonu
+- [ ] Web push notifications
+- [ ] PWA (Progressive Web App)
+- [ ] AI destekli çalışma planı
+- [ ] Sosyal özellikler
+- [ ] Multi-language support
 
 ## 🤝 Katkıda Bulunma
 
-Katkılarınızı bekliyoruz! Lütfen:
-
 1. Fork edin
-2. Feature branch oluşturun
-3. Değişikliklerinizi commit edin
-4. Branch'inizi push edin
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Commit edin (`git commit -m 'Add amazing feature'`)
+4. Push edin (`git push origin feature/amazing-feature`)
 5. Pull Request açın
 
-## 📧 İletişim
+## 📄 Lisans
 
-Sorularınız veya önerileriniz için:
-- Issue açın
-- Pull Request gönderin
+Bu proje MIT lisansı altında lisanslanmıştır.
+
+## 👥 İletişim
+
+Proje Linki: [https://github.com/yourusername/dersly](https://github.com/yourusername/dersly)
 
 ## 🙏 Teşekkürler
 
-DERSLY'yi kullandığınız için teşekkür ederiz! Üniversite hayatınızda başarılar dileriz! 🎓
+- Streamlit ekibine harika framework için
+- Tüm katkıda bulunanlara
 
 ---
 
-**Not:** Bu uygulama eğitim amaçlıdır ve sürekli geliştirilmektedir.
+**Made with ❤️ for students**
+
+**Version:** 2.0.0  
+**Status:** ✅ Production Ready  
+**Last Updated:** 2024

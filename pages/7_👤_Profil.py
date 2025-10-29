@@ -6,6 +6,8 @@ import streamlit as st
 from utils.storage_manager import StorageManager
 from utils.user_manager import UserManager
 from utils.input_validator import InputValidator
+from utils.department_catalog import DepartmentCatalog
+from utils.gpa_systems import GPASystem
 from utils.export_import_ui import (
     show_export_button,
     show_import_button,
@@ -67,10 +69,32 @@ if not profile:
                 "🎓 Öğrenci No",
                 placeholder="2020123456"
             )
-            department = st.text_input(
+            
+            # Department dropdown with search
+            all_departments = ["Seçiniz..."] + DepartmentCatalog.get_all_departments()
+            department = st.selectbox(
                 "🏫 Bölüm",
-                placeholder="Bilgisayar Mühendisliği"
+                options=all_departments,
+                help="Bölümünüzü seçin veya aşağıda özel giriş yapın"
             )
+            
+            # Custom department entry
+            if department == "Seçiniz...":
+                department = st.text_input(
+                    "Veya özel bölüm girin",
+                    placeholder="Bölüm adı"
+                )
+            
+            # University selection
+            universities = ["Seçiniz...", "Boğaziçi Üniversitesi", "İTÜ", "ODTÜ", "Koç Üniversitesi", 
+                          "Sabancı Üniversitesi", "Bilkent Üniversitesi", "Hacettepe Üniversitesi",
+                          "Ankara Üniversitesi", "İstanbul Üniversitesi", "Ege Üniversitesi", "Diğer"]
+            university = st.selectbox(
+                "🎓 Üniversite",
+                options=universities,
+                help="Üniversitenizi seçin (GPA sistemi otomatik ayarlanır)"
+            )
+            
         with col2:
             class_year = st.number_input(
                 "📅 Sınıf",
@@ -79,6 +103,29 @@ if not profile:
                 value=1,
                 step=1
             )
+            
+            # GPA System selection
+            gpa_systems = GPASystem.get_system_names()
+            
+            # Auto-select based on university
+            default_system = "4.0 Çift Harf"
+            if university != "Seçiniz..." and university != "Diğer":
+                default_system = GPASystem.get_university_system(university)
+            
+            try:
+                default_index = gpa_systems.index(default_system)
+            except:
+                default_index = 0
+            
+            gpa_system = st.selectbox(
+                "📊 Not Sistemi",
+                options=gpa_systems,
+                index=default_index,
+                help="Üniversitenizin kullandığı not sistemini seçin"
+            )
+            
+            # Show system description
+            st.caption(f"ℹ️ {GPASystem.get_system_description(gpa_system)}")
         
         st.markdown("<br>", unsafe_allow_html=True)
         
@@ -90,8 +137,10 @@ if not profile:
                 'name': name,
                 'email': email,
                 'student_id': student_id if student_id else None,
-                'department': department if department else None,
-                'class_year': class_year if class_year else None
+                'department': department if department and department != "Seçiniz..." else None,
+                'class_year': class_year if class_year else None,
+                'university': university if university and university != "Seçiniz..." else None,
+                'gpa_system': gpa_system
             }
             
             # Validate profile data
@@ -100,16 +149,19 @@ if not profile:
             if not is_valid:
                 st.error(error_message)
             else:
-                # Create profile
+                # Create profile with new fields
                 UserManager.create_profile(
                     name=name.strip(),
                     email=email.strip(),
                     student_id=student_id.strip() if student_id else None,
-                    department=department.strip() if department else None,
-                    class_year=class_year if class_year else None
+                    department=department.strip() if department and department != "Seçiniz..." else None,
+                    class_year=class_year if class_year else None,
+                    university=university if university and university != "Seçiniz..." else None,
+                    gpa_system=gpa_system
                 )
                 
                 st.success("✅ Profiliniz başarıyla oluşturuldu!")
+                st.info(f"📊 Not sisteminiz: {gpa_system}")
                 st.balloons()
                 st.rerun()
     
