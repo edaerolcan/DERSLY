@@ -154,3 +154,87 @@ class CourseManager:
         """
         StorageManager.initialize_storage()
         return len(st.session_state['courses'])
+    
+    @staticmethod
+    def check_time_conflict(day: str, start_time: str, end_time: str, exclude_course_id: Optional[int] = None) -> tuple[bool, Optional[Dict[str, Any]]]:
+        """
+        Check if a course time conflicts with existing courses.
+        
+        Args:
+            day: Day of week
+            start_time: Start time in HH:MM format
+            end_time: End time in HH:MM format
+            exclude_course_id: Course ID to exclude from conflict check (for updates)
+        
+        Returns:
+            Tuple of (has_conflict, conflicting_course)
+        """
+        StorageManager.initialize_storage()
+        
+        # Convert times to minutes for easier comparison
+        def time_to_minutes(time_str: str) -> int:
+            hours, minutes = map(int, time_str.split(':'))
+            return hours * 60 + minutes
+        
+        new_start = time_to_minutes(start_time)
+        new_end = time_to_minutes(end_time)
+        
+        # Check all courses on the same day
+        for course in st.session_state['courses'].values():
+            # Skip if this is the course being updated
+            if exclude_course_id and course['id'] == exclude_course_id:
+                continue
+            
+            # Only check courses on the same day
+            if course.get('day') != day:
+                continue
+            
+            existing_start = time_to_minutes(course['start_time'])
+            existing_end = time_to_minutes(course['end_time'])
+            
+            # Check for overlap
+            # Overlap occurs if: new_start < existing_end AND new_end > existing_start
+            if new_start < existing_end and new_end > existing_start:
+                return True, course
+        
+        return False, None
+    
+    @staticmethod
+    def get_weekly_schedule() -> Dict[str, List[Dict[str, Any]]]:
+        """
+        Get all courses organized by day of week.
+        
+        Returns:
+            Dictionary with days as keys and list of courses as values
+        """
+        StorageManager.initialize_storage()
+        
+        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        schedule = {day: [] for day in days}
+        
+        for course in st.session_state['courses'].values():
+            day = course.get('day')
+            if day in schedule:
+                schedule[day].append(course)
+        
+        # Sort courses by start time for each day
+        for day in schedule:
+            schedule[day].sort(key=lambda x: x.get('start_time', '00:00'))
+        
+        return schedule
+    
+    @staticmethod
+    def get_today_courses() -> List[Dict[str, Any]]:
+        """
+        Get courses for today.
+        
+        Returns:
+            List of today's courses sorted by start time
+        """
+        StorageManager.initialize_storage()
+        
+        # Get current day
+        day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        today = day_names[datetime.now().weekday()]
+        
+        return CourseManager.get_courses_by_day(today)

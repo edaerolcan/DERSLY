@@ -103,6 +103,52 @@ try:
     
     st.markdown("---")
     
+    # Today's courses section
+    st.markdown("""
+    <div class="section-header">
+        <h2>📚 Bugünkü Derslerim</h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    today_courses = CourseManager.get_today_courses()
+    
+    if today_courses:
+        # Display today's courses in a nice grid
+        for course in today_courses:
+            col1, col2, col3 = st.columns([3, 2, 1])
+            
+            with col1:
+                st.markdown(f"""
+                <div style="
+                    background-color: {course['color']}20;
+                    border-left: 4px solid {course['color']};
+                    padding: 12px;
+                    border-radius: 8px;
+                ">
+                    <div style="font-weight: bold; font-size: 1.1em;">{course['course_code']} - {course['course_name']}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            with col2:
+                st.info(f"⏰ {course['start_time']} - {course['end_time']}")
+            
+            with col3:
+                st.metric("Kredi", course['credits'])
+        
+        # Calculate total hours today
+        total_minutes = 0
+        for course in today_courses:
+            start_h, start_m = map(int, course['start_time'].split(':'))
+            end_h, end_m = map(int, course['end_time'].split(':'))
+            duration = (end_h * 60 + end_m) - (start_h * 60 + start_m)
+            total_minutes += duration
+        
+        st.info(f"📊 Bugün toplam **{len(today_courses)} ders** ve **{total_minutes // 60} saat {total_minutes % 60} dakika** ders var")
+    else:
+        st.success("🎉 Bugün ders yok! Rahat bir gün geçirin.")
+    
+    st.markdown("---")
+    
     # Upcoming assignments
     st.subheader("📅 Yaklaşan Görevler (7 Gün)")
     

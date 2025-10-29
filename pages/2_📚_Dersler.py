@@ -3,6 +3,7 @@ Courses page for DERSLY Streamlit application.
 Manages course schedule and information.
 """
 import streamlit as st
+from datetime import datetime, date, time
 from utils.storage_manager import StorageManager
 from utils.user_manager import UserManager
 from utils.course_manager import CourseManager
@@ -34,7 +35,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Tabs for different views
-tab1, tab2 = st.tabs(["📋 Ders Listesi", "➕ Yeni Ders Ekle"])
+tab1, tab2, tab3 = st.tabs(["📋 Ders Listesi", "➕ Yeni Ders Ekle", "📅 Haftalık Program"])
 
 with tab1:
     st.subheader("Tüm Dersler")
@@ -105,30 +106,46 @@ with tab1:
                                 with col_x:
                                     if st.form_submit_button("💾 Kaydet", use_container_width=True):
                                         # Prepare update data for validation
+                                        start_time_str = new_start.strftime("%H:%M") if new_start else course['start_time']
+                                        end_time_str = new_end.strftime("%H:%M") if new_end else course['end_time']
+                                        
                                         updates = {
                                             'course_name': new_name,
                                             'course_code': new_code,
                                             'credits': new_credits,
                                             'day': course['day'],  # Keep existing day
-                                            'start_time': new_start.strftime("%H:%M") if new_start else course['start_time'],
-                                            'end_time': new_end.strftime("%H:%M") if new_end else course['end_time']
+                                            'start_time': start_time_str,
+                                            'end_time': end_time_str
                                         }
                                         
-                                        # Validate updated course data
-                                        is_valid, error_message = InputValidator.validate_course(updates)
+                                        # Check for time conflicts (exclude current course)
+                                        has_conflict, conflicting_course = CourseManager.check_time_conflict(
+                                            course['day'],
+                                            start_time_str,
+                                            end_time_str,
+                                            exclude_course_id=course['id']
+                                        )
                                         
-                                        if not is_valid:
-                                            st.error(error_message)
+                                        if has_conflict:
+                                            st.error(f"⚠️ **Ders Çakışması!** Bu saatte zaten başka bir ders var:")
+                                            st.warning(f"📚 **{conflicting_course['course_code']}** - {conflicting_course['course_name']}")
+                                            st.info(f"⏰ {conflicting_course['start_time']} - {conflicting_course['end_time']}")
                                         else:
-                                            # Remove day from updates (not needed for update)
-                                            updates.pop('day')
+                                            # Validate updated course data
+                                            is_valid, error_message = InputValidator.validate_course(updates)
                                             
-                                            if CourseManager.update_course(course['id'], updates):
-                                                st.success("✅ Ders güncellendi!")
-                                                del st.session_state[f'editing_course_{course["id"]}']
-                                                st.rerun()
+                                            if not is_valid:
+                                                st.error(error_message)
                                             else:
-                                                st.error("❌ Ders güncellenemedi!")
+                                                # Remove day from updates (not needed for update)
+                                                updates.pop('day')
+                                                
+                                                if CourseManager.update_course(course['id'], updates):
+                                                    st.success("✅ Ders güncellendi!")
+                                                    del st.session_state[f'editing_course_{course["id"]}']
+                                                    st.rerun()
+                                                else:
+                                                    st.error("❌ Ders güncellenemedi!")
                                 
                                 with col_y:
                                     if st.form_submit_button("❌ İptal", use_container_width=True):
@@ -224,14 +241,26 @@ with tab2:
                 'color': color
             }
             
-            # Validate course data
-            is_valid, error_message = InputValidator.validate_course(course_data)
+            # Check for time conflicts
+            has_conflict, conflicting_course = CourseManager.check_time_conflict(
+                day, 
+                start_time.strftime("%H:%M"), 
+                end_time.strftime("%H:%M")
+            )
             
-            if not is_valid:
-                st.error(error_message)
+            if has_conflict:
+                st.error(f"⚠️ **Ders Çakışması!** Bu saatte zaten başka bir ders var:")
+                st.warning(f"📚 **{conflicting_course['course_code']}** - {conflicting_course['course_name']}")
+                st.info(f"⏰ {conflicting_course['start_time']} - {conflicting_course['end_time']}")
             else:
-                course_id = CourseManager.add_course(course_data)
-                st.success(f"✅ Ders başarıyla eklendi! (ID: {course_id})")
+                # Validate course data
+                is_valid, error_message = InputValidator.validate_course(course_data)
+                
+                if not is_valid:
+                    st.error(error_message)
+                else:
+                    course_id = CourseManager.add_course(course_data)
+                    st.success(f"✅ Ders başarıyla eklendi! (ID: {course_id})")
                 
                 # Offer calendar export for recurring course
                 st.info("📅 **Dersi mobil takviminize eklemek ister misiniz?**")
@@ -250,6 +279,143 @@ with tab2:
                 
                 st.balloons()
                 st.rerun()
+
+with tab3:
+    st.subheader("📅 Haftalık Ders Programı")
+    
+    # Get weekly schedule
+    schedule = CourseManager.get_weekly_schedule()
+    
+    # Day names in Turkish
+    day_names_tr = {
+        "Monday": "Pazartesi",
+        "Tuesday": "Salı",
+        "Wednesday": "Çarşamba",
+        "Thursday": "Perşembe",
+        "Friday": "Cuma",
+        "Saturday": "Cumartesi",
+        "Sunday": "Pazar"
+    }
+    
+    # Check if there are any courses
+    total_courses = sum(len(courses) for courses in schedule.values())
+    
+    if total_courses == 0:
+        st.info("📚 Henüz ders eklenmemiş. Haftalık programınızı oluşturmak için ders ekleyin.")
+    else:
+        # Display schedule in grid format
+        st.markdown("### 📊 Haftalık Görünüm")
+        
+        # Create columns for each day
+        days_to_show = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        cols = st.columns(5)
+        
+        for idx, day in enumerate(days_to_show):
+            with cols[idx]:
+                st.markdown(f"**{day_names_tr[day]}**")
+                
+                day_courses = schedule[day]
+                
+                if day_courses:
+                    for course in day_courses:
+                        # Create course card
+                        st.markdown(f"""
+                        <div style="
+                            background-color: {course['color']}20;
+                            border-left: 4px solid {course['color']};
+                            padding: 8px;
+                            margin: 8px 0;
+                            border-radius: 4px;
+                        ">
+                            <div style="font-weight: bold; font-size: 0.9em;">{course['course_code']}</div>
+                            <div style="font-size: 0.8em; margin-top: 4px;">{course['course_name'][:20]}...</div>
+                            <div style="font-size: 0.75em; color: #666; margin-top: 4px;">
+                                ⏰ {course['start_time']} - {course['end_time']}
+                            </div>
+                            <div style="font-size: 0.75em; color: #666;">
+                                📚 {course['credits']} Kredi
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                else:
+                    st.caption("Ders yok")
+        
+        # Weekend courses if any
+        weekend_courses = schedule["Saturday"] + schedule["Sunday"]
+        if weekend_courses:
+            st.markdown("---")
+            st.markdown("### 📅 Hafta Sonu Dersleri")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown(f"**{day_names_tr['Saturday']}**")
+                for course in schedule["Saturday"]:
+                    st.markdown(f"""
+                    <div style="
+                        background-color: {course['color']}20;
+                        border-left: 4px solid {course['color']};
+                        padding: 8px;
+                        margin: 8px 0;
+                        border-radius: 4px;
+                    ">
+                        <div style="font-weight: bold;">{course['course_code']} - {course['course_name']}</div>
+                        <div style="font-size: 0.9em; color: #666; margin-top: 4px;">
+                            ⏰ {course['start_time']} - {course['end_time']} | 📚 {course['credits']} Kredi
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            with col2:
+                st.markdown(f"**{day_names_tr['Sunday']}**")
+                for course in schedule["Sunday"]:
+                    st.markdown(f"""
+                    <div style="
+                        background-color: {course['color']}20;
+                        border-left: 4px solid {course['color']};
+                        padding: 8px;
+                        margin: 8px 0;
+                        border-radius: 4px;
+                    ">
+                        <div style="font-weight: bold;">{course['course_code']} - {course['course_name']}</div>
+                        <div style="font-size: 0.9em; color: #666; margin-top: 4px;">
+                            ⏰ {course['start_time']} - {course['end_time']} | 📚 {course['credits']} Kredi
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+        
+        # Weekly statistics
+        st.markdown("---")
+        st.markdown("### 📊 Haftalık İstatistikler")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            st.metric("Toplam Ders", total_courses)
+        
+        with col2:
+            total_credits = sum(c.get('credits', 3) for c in CourseManager.get_all_courses())
+            st.metric("Toplam Kredi", total_credits)
+        
+        with col3:
+            # Calculate total hours per week
+            total_minutes = 0
+            for day_courses in schedule.values():
+                for course in day_courses:
+                    start_h, start_m = map(int, course['start_time'].split(':'))
+                    end_h, end_m = map(int, course['end_time'].split(':'))
+                    duration = (end_h * 60 + end_m) - (start_h * 60 + start_m)
+                    total_minutes += duration
+            total_hours = total_minutes / 60
+            st.metric("Haftalık Ders Saati", f"{total_hours:.1f}")
+        
+        with col4:
+            # Find busiest day
+            busiest_day = max(schedule.items(), key=lambda x: len(x[1]))
+            if busiest_day[1]:
+                st.metric("En Yoğun Gün", day_names_tr[busiest_day[0]])
+            else:
+                st.metric("En Yoğun Gün", "-")
 
 # Statistics
 st.markdown("---")
