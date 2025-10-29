@@ -276,14 +276,15 @@ with tab1:
         # Show normal assignments
         if normal_assignments:
             st.markdown("### 📋 Diğer Görevler")
-            assignments = normal_assignments
-    
-    # Display assignments
-    if assignments:
-        for assignment in assignments:
-            display_assignment_card(assignment)
+            for assignment in normal_assignments:
+                display_assignment_card(assignment)
     else:
-        st.info("📝 Görev bulunamadı.")
+        # Display all assignments without urgency separation
+        if assignments:
+            for assignment in assignments:
+                display_assignment_card(assignment)
+        else:
+            st.info("📝 Görev bulunamadı.")
 
 
 with tab2:

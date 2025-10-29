@@ -72,40 +72,45 @@ def get_modern_css(theme="light") -> str:
         
         /* Enhanced sidebar navigation links */
         [data-testid="stSidebarNav"] ul {{
-            padding: 0.5rem 0;
+            padding: 0.25rem 0;
         }}
         
         [data-testid="stSidebarNav"] li {{
-            margin: 0.25rem 0;
+            margin: 0.15rem 0;
         }}
         
         [data-testid="stSidebarNav"] a {{
             display: flex !important;
             align-items: center;
-            padding: 1rem 1.25rem !important;
-            font-size: 1.05rem !important;
-            font-weight: 600 !important;
-            border-radius: 12px !important;
-            transition: all 0.3s ease !important;
-            background: rgba(255, 255, 255, 0.1) !important;
-            margin: 0.25rem 0.5rem !important;
-            min-height: 48px !important;
+            padding: 0.65rem 1rem !important;
+            font-size: 0.95rem !important;
+            font-weight: 500 !important;
+            border-radius: 8px !important;
+            transition: all 0.2s ease !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            margin: 0.15rem 0.5rem !important;
+            min-height: 40px !important;
         }}
         
         [data-testid="stSidebarNav"] a:hover {{
-            background: rgba(255, 255, 255, 0.2) !important;
-            transform: translateX(5px) !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            transform: translateX(3px) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
         }}
         
         [data-testid="stSidebarNav"] a[aria-current="page"] {{
-            background: rgba(255, 255, 255, 0.25) !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-            font-weight: 700 !important;
+            background: rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+            font-weight: 600 !important;
         }}
         
         [data-testid="stSidebarNav"] span {{
-            font-size: 1.05rem !important;
+            font-size: 0.95rem !important;
+        }}
+        
+        /* Hide "app" text in sidebar */
+        [data-testid="stSidebarNav"] li:first-child {{
+            display: none !important;
         }}
         
         /* Logo styling with animation */
@@ -116,7 +121,6 @@ def get_modern_css(theme="light") -> str:
             background: rgba(255, 255, 255, 0.15);
             border-radius: 16px;
             backdrop-filter: blur(10px);
-            animation: fadeInDown 0.6s ease-out;
         }}
         
         .sidebar-logo img {{
@@ -288,7 +292,7 @@ def get_modern_css(theme="light") -> str:
             box-shadow: 0 8px 24px rgba(155, 135, 245, 0.25);
             position: relative;
             overflow: hidden;
-            animation: fadeInDown 0.6s ease-out;
+            animation: fadeInDown 0.3s ease-out;
         }}
         
         .page-header::before {{
@@ -330,7 +334,7 @@ def get_modern_css(theme="light") -> str:
             border-radius: 16px;
             margin-bottom: 1.75rem;
             box-shadow: 0 4px 12px rgba(155, 135, 245, 0.2);
-            animation: slideInLeft 0.5s ease-out;
+            animation: slideInLeft 0.3s ease-out;
         }}
         
         .section-header h2 {{
@@ -396,12 +400,6 @@ def get_modern_css(theme="light") -> str:
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 0.5rem;
-            animation: countUp 0.8s ease-out;
-        }}
-        
-        @keyframes countUp {{
-            from {{ opacity: 0; transform: translateY(20px); }}
-            to {{ opacity: 1; transform: translateY(0); }}
         }}
         
         .stats-label {{
@@ -415,12 +413,6 @@ def get_modern_css(theme="light") -> str:
         .stats-icon {{
             font-size: 2.5rem;
             margin-bottom: 0.75rem;
-            animation: bounce 2s infinite;
-        }}
-        
-        @keyframes bounce {{
-            0%, 100% {{ transform: translateY(0); }}
-            50% {{ transform: translateY(-10px); }}
         }}
         
         /* ============================================
@@ -527,32 +519,38 @@ def get_modern_css(theme="light") -> str:
         }}
         
         /* ============================================
-           ANIMATIONS
+           ANIMATIONS - Optimized for smooth transitions
            ============================================ */
         
+        /* Reduce animation intensity for smoother page transitions */
         @keyframes fadeIn {{
-            from {{ opacity: 0; transform: translateY(30px); }}
+            from {{ opacity: 0; transform: translateY(10px); }}
             to {{ opacity: 1; transform: translateY(0); }}
         }}
         
         @keyframes fadeInDown {{
-            from {{ opacity: 0; transform: translateY(-30px); }}
+            from {{ opacity: 0; transform: translateY(-10px); }}
             to {{ opacity: 1; transform: translateY(0); }}
         }}
         
         @keyframes slideInLeft {{
-            from {{ opacity: 0; transform: translateX(-30px); }}
+            from {{ opacity: 0; transform: translateX(-10px); }}
             to {{ opacity: 1; transform: translateX(0); }}
         }}
         
         @keyframes slideInRight {{
-            from {{ opacity: 0; transform: translateX(30px); }}
+            from {{ opacity: 0; transform: translateX(10px); }}
             to {{ opacity: 1; transform: translateX(0); }}
         }}
         
-        .fade-in {{ animation: fadeIn 0.6s ease-out; }}
-        .slide-in-left {{ animation: slideInLeft 0.6s ease-out; }}
-        .slide-in-right {{ animation: slideInRight 0.6s ease-out; }}
+        .fade-in {{ animation: fadeIn 0.3s ease-out; }}
+        .slide-in-left {{ animation: slideInLeft 0.3s ease-out; }}
+        .slide-in-right {{ animation: slideInRight 0.3s ease-out; }}
+        
+        /* Smooth page transitions */
+        .main .block-container {{
+            animation: fadeIn 0.2s ease-out;
+        }}
         
         /* ============================================
            SCROLLBAR

@@ -8,6 +8,7 @@ from utils.user_manager import UserManager
 from utils.input_validator import InputValidator
 from utils.department_catalog import DepartmentCatalog
 from utils.gpa_systems import GPASystem
+from utils.yok_api import YokAPI
 from utils.export_import_ui import (
     show_export_button,
     show_import_button,
@@ -70,31 +71,98 @@ if not profile:
                 placeholder="2020123456"
             )
             
-            # Department dropdown with search
-            all_departments = ["Seçiniz..."] + DepartmentCatalog.get_all_departments()
-            department = st.selectbox(
-                "🏫 Bölüm",
-                options=all_departments,
-                help="Bölümünüzü seçin veya aşağıda özel giriş yapın"
-            )
+            # Department selection with YÖK API
+            st.markdown("**🏫 Bölüm Bilgileri**")
+            
+            try:
+                # Get departments from YÖK API
+                all_departments_dict = YokAPI.get_all_departments()
+                
+                # Faculty selection first
+                faculties = ["Seçiniz..."] + list(all_departments_dict.keys())
+                selected_faculty = st.selectbox(
+                    "🎓 Fakülte",
+                    options=faculties,
+                    help="Önce fakültenizi seçin"
+                )
+                
+                # Department selection based on faculty
+                if selected_faculty != "Seçiniz...":
+                    faculty_departments = ["Seçiniz..."] + all_departments_dict[selected_faculty] + ["Diğer"]
+                    department = st.selectbox(
+                        "🏫 Bölüm",
+                        options=faculty_departments,
+                        help="Bölümünüzü seçin"
+                    )
+                else:
+                    # Show all departments if no faculty selected
+                    all_deps = ["Seçiniz..."] + YokAPI.get_all_departments_flat() + ["Diğer"]
+                    department = st.selectbox(
+                        "🏫 Bölüm",
+                        options=all_deps,
+                        help="Bölümünüzü seçin veya önce fakülte seçin"
+                    )
+                
+            except Exception as e:
+                # Fallback to old method
+                all_departments = ["Seçiniz..."] + DepartmentCatalog.get_all_departments()
+                department = st.selectbox(
+                    "🏫 Bölüm",
+                    options=all_departments,
+                    help="Bölümünüzü seçin"
+                )
             
             # Custom department entry
-            if department == "Seçiniz...":
-                department = st.text_input(
+            if department == "Diğer" or department == "Seçiniz...":
+                custom_dept = st.text_input(
                     "Veya özel bölüm girin",
                     placeholder="Bölüm adı"
                 )
+                if custom_dept:
+                    department = custom_dept
             
-            # University selection
-            universities = ["Seçiniz...", "Bahçeşehir Üniversitesi", "Boğaziçi Üniversitesi", "İTÜ", "ODTÜ", 
-                          "Koç Üniversitesi", "Sabancı Üniversitesi", "Bilkent Üniversitesi", 
-                          "Hacettepe Üniversitesi", "Ankara Üniversitesi", "İstanbul Üniversitesi", 
-                          "Ege Üniversitesi", "Marmara Üniversitesi", "Yıldız Teknik Üniversitesi", "Diğer"]
-            university = st.selectbox(
-                "🎓 Üniversite",
-                options=universities,
-                help="Üniversitenizi seçin (GPA sistemi otomatik ayarlanır)"
-            )
+            # University selection with YÖK API
+            st.markdown("**🎓 Üniversite Bilgileri**")
+            
+            # Get universities from YÖK API
+            try:
+                yok_universities = YokAPI.get_all_universities()
+                university_names = ["Seçiniz..."] + [uni['name'] for uni in yok_universities] + ["Diğer"]
+                
+                # Add city filter
+                cities = ["Tüm Şehirler"] + YokAPI.get_cities()
+                selected_city = st.selectbox(
+                    "📍 Şehir Filtresi",
+                    options=cities,
+                    help="Üniversiteleri şehre göre filtreleyin"
+                )
+                
+                # Filter universities by city
+                if selected_city != "Tüm Şehirler":
+                    filtered_unis = YokAPI.get_universities_by_city(selected_city)
+                    university_names = ["Seçiniz..."] + [uni['name'] for uni in filtered_unis] + ["Diğer"]
+                
+                university = st.selectbox(
+                    "🎓 Üniversite",
+                    options=university_names,
+                    help="Üniversitenizi seçin (GPA sistemi otomatik ayarlanır)"
+                )
+                
+                # Show university info if selected
+                if university != "Seçiniz..." and university != "Diğer":
+                    uni_info = YokAPI.get_university_by_name(university)
+                    if uni_info:
+                        st.caption(f"📍 {uni_info['city']} | 🏛️ {uni_info['type']}")
+                
+            except Exception as e:
+                st.warning("⚠️ YÖK API'ye bağlanılamadı. Varsayılan liste kullanılıyor.")
+                university_names = ["Seçiniz...", "Bahçeşehir Üniversitesi", "Boğaziçi Üniversitesi", 
+                                  "İTÜ", "ODTÜ", "Koç Üniversitesi", "Sabancı Üniversitesi", "Diğer"]
+                university = st.selectbox(
+                    "🎓 Üniversite",
+                    options=university_names,
+                    help="Üniversitenizi seçin"
+                )
             
             # Custom university entry if "Diğer" selected
             if university == "Diğer":
